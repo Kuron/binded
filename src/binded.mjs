@@ -12,7 +12,7 @@ export const binded = {
     const start = Date.now();
     const { map, proxyMap } = this.createMap();
     this.findScope(elem, map, opts);
-    console.debug(`binded: Initialized in ${Date.now() - start}ms`);
+    console.info(`binded: Initialized in ${Date.now() - start}ms`);
     return proxyMap;
   },
 
