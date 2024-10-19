@@ -1,0 +1,24 @@
+{
+  "name": "@kurons/binded",
+  "version": "1.0.0",
+  "url": "https://github.com/Kuron/binded.git",
+  "description": "",
+  "scripts": {
+    "bundle": "npx rollup src/index.mjs --file output/binded.js --format iife",
+    "lint": "npx eslint .",
+    "test": "node test/test.mjs",
+    "prepare": "husky"
+  },
+  "author": "Kuron",
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@eslint/js": "^9.12.0",
+    "eslint": "^9.12.0",
+    "globals": "^15.11.0",
+    "husky": "^9.1.6",
+    "rollup": "^4.24.0",
+    "semantic-release": "^22.0.12"
+  }
+}
