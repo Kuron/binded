@@ -7,7 +7,7 @@
     "access": "public"
   },
   "scripts": {
-    "bundle": "npx rollup src/index.mjs --file output/binded.js --format iife",
+    "bundle": "npx rollup src/index.mjs --file dist/binded.js --format iife",
     "lint": "npx eslint .",
     "test": "node test/test.mjs",
     "prepare": "husky"

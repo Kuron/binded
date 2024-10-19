@@ -39,7 +39,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: binded.js
-          path: output/binded.js
+          path: dist/binded.js
           if-no-files-found: error
       - name: Release
         env:
