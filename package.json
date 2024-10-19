@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "url": "https://github.com/Kuron/binded.git",
   "description": "",
+  "private": false,
   "scripts": {
     "bundle": "npx rollup src/index.mjs --file output/binded.js --format iife",
     "lint": "npx eslint .",
