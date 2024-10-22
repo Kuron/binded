@@ -70,8 +70,8 @@ export const attributes = [
     processor: {
       as({ elem, expObj: { right: alias }, map }) {
         operators.as(map, alias, {
-          get() { return elem.innerText; },
-          set(value) { elem.innerText = value; },
+          get() { return elem.textContent; },
+          set(value) { elem.textContent = value; },
         });
       },
     },
