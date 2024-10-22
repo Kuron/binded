@@ -2,8 +2,7 @@
 import { attributes } from './attrs.mjs';
 import { operators } from './operators.mjs';
 
-let logging = true;
-const logError = msg => logging && console.error(`${msg}`);
+const logError = msg => console.error(`${msg}`);
 const identRegex = /^[a-z][a-z0-9\-_.]{0,64}$/i;
 const bindScopeContext = Symbol();
 const attrPrefixDefault = 'binded';
@@ -13,7 +12,7 @@ export const binded = {
     const start = Date.now();
     const { map, proxyMap } = this.createMap();
     this.findScope(elem, map, opts);
-    logging && console.info(`binded: Initialized in ${Date.now() - start}ms`);
+    console.info(`binded: Initialized in ${Date.now() - start}ms`);
     return proxyMap;
   },
 
@@ -32,19 +31,20 @@ export const binded = {
   findScope(elem, parentMap, { context, attrPrefix } = {}) {
     const processingContext = [];
     const bindedScopeAttrName = `${attrPrefix ?? attrPrefixDefault}-scope`;
-    const bindScopeElems = [elem, ...elem.querySelectorAll(`[${bindedScopeAttrName}]`)]
+    const bindScopeElems = (elem.hasAttribute(bindedScopeAttrName) ? [elem] : [])
+      .concat([...elem.querySelectorAll(`[${bindedScopeAttrName}]`)])
       .filter(elem => {
         if (elem[bindScopeContext])
           return false;
         const expStr = elem.getAttribute(bindedScopeAttrName);
         const expObjs = this.parseBindedExp(expStr);
         if (!expObjs || expObjs.length !== 1 || expObjs[0].operator !== 'as') 
-          return logError(`Invalid expression for ${bindedScopeAttrName}, "${expStr}"`);
+          throw new Error(`Invalid expression for ${bindedScopeAttrName}, "${expStr}"`);
         return true;
       });
 
     if (!bindScopeElems.length)
-      return logError(`No unprocessed binded scopes were found. Declare a scope with the following, "[binded-scope="as name"]"`);
+      throw new Error(`No unprocessed binded scopes were found. Declare a scope with the following, "[binded-scope="as name"]"`);
 
     bindScopeElems.forEach(elem => {
       const { map, proxyMap } = this.createMap();
@@ -97,12 +97,12 @@ export const binded = {
         return;
       expObjs.forEach(expObj => {
         if (!(expObj.operator in processor))
-          return logError(`Invalid operator used for binder "${name}", "${expObj.operator}"`);
+          throw new Error(`Invalid operator used for binder "${name}", "${expObj.operator}"`);
         if (descriptor) {
           if (descriptor.reqContext && (!context || !context[name]))
-            return logError(`This binder is missing a required context, "${name}"`);
+            throw new Error(`This binder is missing a required context, "${name}"`);
           if (descriptor.reqLeft && !expObj.left)
-            return logError(`The left operand is required for this binder, "${name}"`);
+            throw new Error(`The left operand is required for this binder, "${name}"`);
         }
         processor[expObj.operator]({ elem, expObj, map, context: context?.[name] });
       });
@@ -117,23 +117,23 @@ export const binded = {
       const tokens = exp.trim().split(/\s+/g);
 
       if (tokens.length < 2 || tokens.length > 3)
-        return logError(`Invalid expression specified, ${exp}`);
+        throw new Error(`Invalid expression specified, ${exp}`);
       if (tokens.length === 2)
         tokens.unshift(null);
       if (tokens[0] && !identRegex.test(tokens[0]))
-        return logError(`Invalid left operand name, ${tokens[0]}`);
+        throw new Error(`Invalid left operand name, ${tokens[0]}`);
       if (!(tokens[1] in operators))
-        return logError(`Unknown operator, ${tokens[1]}`);
+        throw new Error(`Unknown operator, ${tokens[1]}`);
       if (!identRegex.test(tokens[2]))
-        return logError(`Invalid right operand name, ${tokens[2]}`);
+        throw new Error(`Invalid right operand name, ${tokens[2]}`);
 
       const leftParts = tokens[0] && tokens[0].split('.');
       const rightParts = tokens[2].split('.');
 
       if (leftParts && leftParts.some(part => !part))
-        return logError(`Invalid left operand attribute, ${tokens[0]}`);
+        throw new Error(`Invalid left operand attribute, ${tokens[0]}`);
       if (rightParts.some(part => !part))
-        return logError(`Invalid right operand attribute, ${tokens[2]}`);
+        throw new Error(`Invalid right operand attribute, ${tokens[2]}`);
 
       return {
         left: leftParts && leftParts[0],
@@ -144,7 +144,5 @@ export const binded = {
       };
     }).filter(obj => obj);
   },
-
-  logging(value) { logging = value; },
 };
 

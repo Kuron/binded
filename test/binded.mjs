@@ -6,12 +6,10 @@ import { JSDOM } from 'jsdom';
 
 import { binded } from '../src/binded.mjs';
 
-binded.logging(false);
-
 describe('binded', () => {
-  it('should have 6 methods', () => {
-    assert.equal(Object.keys(binded).length, 6);
-    assert.deepEqual(Object.keys(binded), ['init', 'createMap', 'findScope', 'inspectElem', 'parseBindedExp', 'logging']);
+  it('should have 5 methods', () => {
+    assert.equal(Object.keys(binded).length, 5);
+    assert.deepEqual(Object.keys(binded), ['init', 'createMap', 'findScope', 'inspectElem', 'parseBindedExp']);
   });
 
   describe('init', () => {
@@ -52,18 +50,18 @@ describe('binded', () => {
       it('should be empty with an empty str', () => assert.deepEqual(binded.parseBindedExp(''), []));
       it('should be empty with an space-only str', () => assert.deepEqual(binded.parseBindedExp('  '), []));
     
-      it('should be empty with 1 token', () => assert.deepEqual(binded.parseBindedExp('tok1'), []));
-      it('should be empty with 1 only a valid operator', () => assert.deepEqual(binded.parseBindedExp('as'), []));
-      it('should be empty with 4 token (1)', () => assert.deepEqual(binded.parseBindedExp('tok1 tok2 as tok3'), []));
-      it('should be empty with 4 token (2)', () => assert.deepEqual(binded.parseBindedExp('tok1 as tok2 tok3'), []));
+      it('should be empty with 1 token', () => assert.throws(() => binded.parseBindedExp('tok1')));
+      it('should be empty with 1 only a valid operator', () => assert.throws(() => binded.parseBindedExp('as')));
+      it('should be empty with 4 token (1)', () => assert.throws(() => binded.parseBindedExp('tok1 tok2 as tok3')));
+      it('should be empty with 4 token (2)', () => assert.throws(() => binded.parseBindedExp('tok1 as tok2 tok3')));
       
-      it('should be empty with an invalid ident (1)', () => assert.deepEqual(binded.parseBindedExp('1tok as 2tok'), []));
-      it('should be empty with an invalid ident (2)', () => assert.deepEqual(binded.parseBindedExp('$tok1 as $tok2'), []));
-      it('should be empty with an invalid ident (3)', () => assert.deepEqual(binded.parseBindedExp('_tok1 as _tok2'), []));
-      it('should be empty with an invalid ident (4)', () => assert.deepEqual(binded.parseBindedExp('-tok1 as itok2'), []));
+      it('should be empty with an invalid ident (1)', () => assert.throws(() => binded.parseBindedExp('1tok as 2tok')));
+      it('should be empty with an invalid ident (2)', () => assert.throws(() => binded.parseBindedExp('$tok1 as $tok2')));
+      it('should be empty with an invalid ident (3)', () => assert.throws(() => binded.parseBindedExp('_tok1 as _tok2')));
+      it('should be empty with an invalid ident (4)', () => assert.throws(() => binded.parseBindedExp('-tok1 as itok2')));
       
-      it('should be empty with an invalid op (1)', () => assert.deepEqual(binded.parseBindedExp('tok1 op tok2'), []));
-      it('should be empty with an invalid op (2)', () => assert.deepEqual(binded.parseBindedExp('tok1 $as tok2'), []));
+      it('should be empty with an invalid op (1)', () => assert.throws(() => binded.parseBindedExp('tok1 op tok2')));
+      it('should be empty with an invalid op (2)', () => assert.throws(() => binded.parseBindedExp('tok1 $as tok2')));
     });
 
     describe('success', () => {
