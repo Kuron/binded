@@ -2,20 +2,38 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
+import { JSDOM } from 'jsdom';
+
 import { binded } from '../src/binded.mjs';
 
+binded.logging(false);
+
 describe('binded', () => {
-  it('should have 5 methods', () => {
-    assert.equal(Object.keys(binded).length, 5);
-    assert.deepEqual(Object.keys(binded), ['init', 'createMap', 'findScope', 'inspectElem', 'parseBindedExp']);
+  it('should have 6 methods', () => {
+    assert.equal(Object.keys(binded).length, 6);
+    assert.deepEqual(Object.keys(binded), ['init', 'createMap', 'findScope', 'inspectElem', 'parseBindedExp', 'logging']);
   });
 
   describe('init', () => {
-    // STUB
+    it('should find the scope from the specified elem', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-text="as test"></div></body>');
+      const bindings = binded.init(dom.window.document.body);
+      assert.ok('app' in bindings);
+    });
+
+    it('should find the scope from a child elem', () => {
+      const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><div binded-text="as test"></div></div></body>');
+      const bindings = binded.init(dom.window.document.body);
+      assert.ok('app' in bindings);
+    });
   });
 
   describe('createMap', () => {
-    // STUB
+    it('should return a map and proxyMap', () => {
+      const ret = binded.createMap();
+      assert.ok('map' in ret);
+      assert.ok('proxyMap' in ret);
+    });
   });
 
   describe('findScope', () => {
