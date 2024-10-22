@@ -26,7 +26,7 @@ export const attributes = [
 
   {
     name: 'event',
-    descriptor: { reqContext: true, reqLeft: true },
+    descriptor: { reqContext: true, reqLeft: true, validRightAttrs: ['prevent', 'stop'] },
     processor: {
       on({ elem, expObj: { left: funcName, right: eventType, rightAttrs: eventModifiers }, context }) {
         operators.on(elem, eventType, context[funcName], eventModifiers);

@@ -103,6 +103,8 @@ export const binded = {
             throw new Error(`This binder is missing a required context, "${name}"`);
           if (descriptor.reqLeft && !expObj.left)
             throw new Error(`The left operand is required for this binder, "${name}"`);
+          if (descriptor.validRightAttrs && expObj.rightAttrs.length && !expObj.rightAttrs.every(attr => descriptor.validRightAttrs.includes(attr)))
+            throw new Error(`The right operand specified an unknown attribute, "${expObj.rightAttrs}"`);
         }
         processor[expObj.operator]({ elem, expObj, map, context: context?.[name] });
       });
@@ -130,9 +132,9 @@ export const binded = {
       const leftParts = tokens[0] && tokens[0].split('.');
       const rightParts = tokens[2].split('.');
 
-      if (leftParts && leftParts.some(part => !part))
+      if (leftParts && leftParts.some(part => !part || !identRegex.test(part)))
         throw new Error(`Invalid left operand attribute, ${tokens[0]}`);
-      if (rightParts.some(part => !part))
+      if (rightParts.some(part => !part || !identRegex.test(part)))
         throw new Error(`Invalid right operand attribute, ${tokens[2]}`);
 
       return {

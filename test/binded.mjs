@@ -62,6 +62,10 @@ describe('binded', () => {
       it('should throw with an invalid ident (5)', () => assert.throws(() => binded.parseBindedExp(`${'t'.repeat(65)} as tok2`)));
       it('should throw with an invalid ident (6)', () => assert.throws(() => binded.parseBindedExp(`tok1 as ${'t'.repeat(65)}`)));
       
+      it('should throw with an invalid attr (1)', () => assert.throws(() => binded.parseBindedExp('tok1.1attr as tok2')));
+      it('should throw with an invalid attr (2)', () => assert.throws(() => binded.parseBindedExp('tok1 as tok2.2attr')));
+      it('should throw with an invalid attr (3)', () => assert.throws(() => binded.parseBindedExp('tok1.1attr as tok2.2attr')));
+      
       it('should throw with an invalid op (1)', () => assert.throws(() => binded.parseBindedExp('tok1 op tok2')));
       it('should throw with an invalid op (2)', () => assert.throws(() => binded.parseBindedExp('tok1 $as tok2')));
     });
