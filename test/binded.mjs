@@ -59,6 +59,8 @@ describe('binded', () => {
       it('should throw with an invalid ident (2)', () => assert.throws(() => binded.parseBindedExp('$tok1 as $tok2')));
       it('should throw with an invalid ident (3)', () => assert.throws(() => binded.parseBindedExp('_tok1 as _tok2')));
       it('should throw with an invalid ident (4)', () => assert.throws(() => binded.parseBindedExp('-tok1 as itok2')));
+      it('should throw with an invalid ident (5)', () => assert.throws(() => binded.parseBindedExp(`${'t'.repeat(65)} as tok2`)));
+      it('should throw with an invalid ident (6)', () => assert.throws(() => binded.parseBindedExp(`tok1 as ${'t'.repeat(65)}`)));
       
       it('should throw with an invalid op (1)', () => assert.throws(() => binded.parseBindedExp('tok1 op tok2')));
       it('should throw with an invalid op (2)', () => assert.throws(() => binded.parseBindedExp('tok1 $as tok2')));
@@ -73,6 +75,9 @@ describe('binded', () => {
         [{ left: 'tok1', leftAttrs: ['lattr'], operator: 'as', right: 'tok2', rightAttrs: ['rattr'] }]));
       it('should be valid, with multiple attrs', () => assert.deepEqual(binded.parseBindedExp('tok1.la1.la2 as tok2.ra1.ra2'),
         [{ left: 'tok1', leftAttrs: ['la1', 'la2'], operator: 'as', right: 'tok2', rightAttrs: ['ra1', 'ra2'] }]));
+      
+      it('should not throw with a left-operand of 64 len', () => assert.doesNotThrow(() => binded.parseBindedExp(`${'t'.repeat(64)} as tok2`)));
+      it('should not throw with a right-operand of 64 len', () => assert.doesNotThrow(() => binded.parseBindedExp(`tok1 as ${'t'.repeat(64)}`)));
     });
   });
 });

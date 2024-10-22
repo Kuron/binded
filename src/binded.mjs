@@ -3,7 +3,7 @@ import { attributes } from './attrs.mjs';
 import { operators } from './operators.mjs';
 
 const logError = msg => console.error(`${msg}`);
-const identRegex = /^[a-z][a-z0-9\-_.]{0,64}$/i;
+const identRegex = /^[a-z][a-z0-9\-_.]{0,63}$/i;
 const bindScopeContext = Symbol();
 const attrPrefixDefault = 'binded';
 
