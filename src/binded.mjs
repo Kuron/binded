@@ -112,7 +112,7 @@ export const binded = {
   // Expects: [<left-operand>] <operator> <right-operand> ["and" ...]
   parseBindedExp(str) {
     if (!str || typeof str !== 'string' || !str.trim().length)
-      return [];
+      throw new Error('An expression is required')
     return str.trim().split('and').map(exp => {
       const tokens = exp.trim().split(/\s+/g);
 

@@ -44,24 +44,24 @@ describe('binded', () => {
 
   describe('parseBindedExp', () => {
     describe('failures', () => {
-      it('should be empty with no args', () => assert.deepEqual(binded.parseBindedExp(), []));
-      it('should be empty with undefined', () => assert.deepEqual(binded.parseBindedExp(undefined), []));
-      it('should be empty with null', () => assert.deepEqual(binded.parseBindedExp(null), []));
-      it('should be empty with an empty str', () => assert.deepEqual(binded.parseBindedExp(''), []));
-      it('should be empty with an space-only str', () => assert.deepEqual(binded.parseBindedExp('  '), []));
+      it('should throw with no args', () => assert.throws(() => binded.parseBindedExp()));
+      it('should throw with undefined', () => assert.throws(() => binded.parseBindedExp(undefined)));
+      it('should throw with null', () => assert.throws(() => binded.parseBindedExp(null)));
+      it('should throw with an empty str', () => assert.throws(() => binded.parseBindedExp('')));
+      it('should throw with an space-only str', () => assert.throws(() => binded.parseBindedExp('  ')));
     
-      it('should be empty with 1 token', () => assert.throws(() => binded.parseBindedExp('tok1')));
-      it('should be empty with 1 only a valid operator', () => assert.throws(() => binded.parseBindedExp('as')));
-      it('should be empty with 4 token (1)', () => assert.throws(() => binded.parseBindedExp('tok1 tok2 as tok3')));
-      it('should be empty with 4 token (2)', () => assert.throws(() => binded.parseBindedExp('tok1 as tok2 tok3')));
+      it('should throw with 1 token', () => assert.throws(() => binded.parseBindedExp('tok1')));
+      it('should throw with 1 only a valid operator', () => assert.throws(() => binded.parseBindedExp('as')));
+      it('should throw with 4 token (1)', () => assert.throws(() => binded.parseBindedExp('tok1 tok2 as tok3')));
+      it('should throw with 4 token (2)', () => assert.throws(() => binded.parseBindedExp('tok1 as tok2 tok3')));
       
-      it('should be empty with an invalid ident (1)', () => assert.throws(() => binded.parseBindedExp('1tok as 2tok')));
-      it('should be empty with an invalid ident (2)', () => assert.throws(() => binded.parseBindedExp('$tok1 as $tok2')));
-      it('should be empty with an invalid ident (3)', () => assert.throws(() => binded.parseBindedExp('_tok1 as _tok2')));
-      it('should be empty with an invalid ident (4)', () => assert.throws(() => binded.parseBindedExp('-tok1 as itok2')));
+      it('should throw with an invalid ident (1)', () => assert.throws(() => binded.parseBindedExp('1tok as 2tok')));
+      it('should throw with an invalid ident (2)', () => assert.throws(() => binded.parseBindedExp('$tok1 as $tok2')));
+      it('should throw with an invalid ident (3)', () => assert.throws(() => binded.parseBindedExp('_tok1 as _tok2')));
+      it('should throw with an invalid ident (4)', () => assert.throws(() => binded.parseBindedExp('-tok1 as itok2')));
       
-      it('should be empty with an invalid op (1)', () => assert.throws(() => binded.parseBindedExp('tok1 op tok2')));
-      it('should be empty with an invalid op (2)', () => assert.throws(() => binded.parseBindedExp('tok1 $as tok2')));
+      it('should throw with an invalid op (1)', () => assert.throws(() => binded.parseBindedExp('tok1 op tok2')));
+      it('should throw with an invalid op (2)', () => assert.throws(() => binded.parseBindedExp('tok1 $as tok2')));
     });
 
     describe('success', () => {
