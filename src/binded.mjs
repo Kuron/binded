@@ -2,7 +2,8 @@
 import { attributes } from './attrs.mjs';
 import { operators } from './operators.mjs';
 
-const logError = msg => console.error(`${msg}`);
+let logging = true;
+const logError = msg => logging && console.error(`${msg}`);
 const identRegex = /^[a-z][a-z0-9\-_.]{0,64}$/i;
 const bindScopeContext = Symbol();
 const attrPrefixDefault = 'binded';
@@ -12,7 +13,7 @@ export const binded = {
     const start = Date.now();
     const { map, proxyMap } = this.createMap();
     this.findScope(elem, map, opts);
-    console.info(`binded: Initialized in ${Date.now() - start}ms`);
+    logging && console.info(`binded: Initialized in ${Date.now() - start}ms`);
     return proxyMap;
   },
 
@@ -31,7 +32,7 @@ export const binded = {
   findScope(elem, parentMap, { context, attrPrefix } = {}) {
     const processingContext = [];
     const bindedScopeAttrName = `${attrPrefix ?? attrPrefixDefault}-scope`;
-    const bindScopeElems = [...elem.querySelectorAll(`[${bindedScopeAttrName}]`)]
+    const bindScopeElems = [elem, ...elem.querySelectorAll(`[${bindedScopeAttrName}]`)]
       .filter(elem => {
         if (elem[bindScopeContext])
           return false;
@@ -143,5 +144,7 @@ export const binded = {
       };
     }).filter(obj => obj);
   },
+
+  logging(value) { logging = value; },
 };
 
