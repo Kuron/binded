@@ -5,6 +5,18 @@ A lightweight JavaScript framework that handles DOM bindings for small projects.
 
 Why? When you want to quickly experiment with small projects in vanilla JS, but don't want to write and handle DOM reference code. So, just markup the DOM and call ```binded.bind()``` to get all the references. 
 
+## Install
+
+```
+npm install @kurons/binded
+```
+
+The bundle from ```node_modules/@kurons/binded/dist/binded.js``` can be loaded in a browser.
+
+```
+<script src="<PATH>/binded.js"></script>
+```
+
 ## Usage
 
 Declares a scope. Multiple scopes can be declared. Scopes can be nested within another scope. There has to be at least one scope declared.
