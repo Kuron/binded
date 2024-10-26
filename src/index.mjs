@@ -6,8 +6,8 @@ const profilingStats = {};
 
 window.binded = {
   bind: (elem, opts) => {
-    const ret = (opts.timings ? profileAllMethods(binded, profilingStats) : binded).init(elem, opts);
-    opts.timings && console.table(profilingStats);
+    const ret = (opts.profiling ? profileAllMethods(binded, profilingStats) : binded).init(elem, opts);
+    opts.profiling && console.table(profilingStats);
     return ret;
   },
   register: () => { throw new Error('binded: Not implemented'); },
