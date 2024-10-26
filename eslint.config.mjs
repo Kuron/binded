@@ -12,7 +12,7 @@ export default [
       'max-depth': ['warn'],
       'max-params': ['warn', 4],
       'max-statements': ['warn', 20],
-      'no-console': ['error', { allow: ['error', 'info', 'warn'] }],
+      'no-console': ['error', { allow: ['error', 'info', 'table', 'warn'] }],
       'no-eval': ['error'],
       'no-inner-declarations': ['error'],
       'no-label-var': ['error'],
