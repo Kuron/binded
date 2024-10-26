@@ -4,6 +4,7 @@ import { operators } from './operators.mjs';
 import { capitalize } from './utils.mjs';
 
 const logError = msg => console.error(`${msg}`);
+const attrPrefixRegex = /^[a-z]{0,32}$/i;
 const identRegex = /^[a-z][a-z0-9\-_.]{0,63}$/i;
 const bindScopeContext = Symbol();
 const bindElemContext = Symbol();
@@ -11,6 +12,8 @@ const attrPrefixDefault = 'binded';
 
 export const binded = {
   init(elem, opts) {
+    if (opts && 'attrPrefix' in opts && !attrPrefixRegex.test(opts.attrPrefix))
+      throw new Error(`Invalid attrPrefix specified, ${opts.attrPrefix}`);
     const { map, proxyMap } = this.createMap();
     this.findScope(elem, map, opts);
     return proxyMap;

@@ -42,6 +42,16 @@ describe('binded', () => {
       assert.equal(bindings.app.test, 'hello world');
       assert.equal(dom.window.document.body.firstChild.firstChild.textContent, 'hello world');
     });
+
+    it('should throw when an invalid attrPrefix is specified', () => {
+      const dom = new JSDOM();
+      assert.throws(() => binded.init(dom.window.document.body, { attrPrefix: 'has space' }));
+      assert.throws(() => binded.init(dom.window.document.body, { attrPrefix: 'hasNumber9' }));
+      assert.throws(() => binded.init(dom.window.document.body, { attrPrefix: 'has-dashes' }));
+      assert.throws(() => binded.init(dom.window.document.body, { attrPrefix: 'has_underscores' }));
+      assert.throws(() => binded.init(dom.window.document.body, { attrPrefix: ' hasLeadingSpace' }));
+      assert.throws(() => binded.init(dom.window.document.body, { attrPrefix: 'hasTrailingSpace ' }));
+    });
   });
 
   describe('createMap', () => {
