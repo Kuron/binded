@@ -10,10 +10,8 @@ const attrPrefixDefault = 'binded';
 
 export const binded = {
   init(elem, opts) {
-    const start = Date.now();
     const { map, proxyMap } = this.createMap();
     this.findScope(elem, map, opts);
-    console.info(`binded: Initialized in ${Date.now() - start}ms`);
     return proxyMap;
   },
 
