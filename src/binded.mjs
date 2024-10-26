@@ -20,8 +20,12 @@ export const binded = {
   createMap() {
     const map = {};
     const proxyMap = new Proxy(map, {
+      get(target, prop) {
+        if (prop[0] !== '$')
+          return Reflect.get(...arguments);
+      },
       set(target, prop) {
-        if (prop in target)
+        if (prop[0] !== '$' && prop in target)
           return Reflect.set(...arguments);
         throw new Error(`binded: Property does not exist, ${prop}`);
       },

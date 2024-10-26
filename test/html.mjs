@@ -68,6 +68,18 @@ describe('HTML', () => {
       assert.equal(dom.window.document.body.firstChild.value, 'baz');
     });
 
+    it('should not expose private props', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><input binded-prop="disabled into disableAll"/><input binded-prop="disabled into disableAll"/></body>');
+      const { app } = binded.init(dom.window.document.body);
+      assert.equal(app.$disableAll, undefined);
+    });
+
+    it('should throw when writing to private prop', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><input binded-prop="disabled into disableAll"/><input binded-prop="disabled into disableAll"/></body>');
+      const { app } = binded.init(dom.window.document.body);
+      assert.throws(() => app.$disableAll = true);
+    });
+
     it('should throw when the left-operand is missing', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><input value="bar" binded-prop="as foo"/></body>');
       assert.throws(() => binded.init(dom.window.document.body));
