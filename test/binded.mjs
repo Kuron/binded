@@ -61,7 +61,21 @@ describe('binded', () => {
   });
 
   describe('inspectElem', () => {
-    // STUB
+    it('should be binded by prop', () => {
+      const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><input value="test"/></div></body>');
+      dom.window.document.body.firstChild.firstChild.bindedProp = 'value as search';
+      const { app } = binded.init(dom.window.document.body);
+      assert.ok('search' in app);
+      assert.equal(app.search, 'test');
+    });
+    
+    it('should be able to write when binded by prop', () => {
+      const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><input value="test"/></div></body>');
+      dom.window.document.body.firstChild.firstChild.bindedProp = 'value as search';
+      const { app } = binded.init(dom.window.document.body);
+      app.search = 'testing';
+      assert.equal(dom.window.document.body.firstChild.firstChild.value, 'testing');
+    });
   });
 
   describe('parseBindedExp', () => {

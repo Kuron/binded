@@ -1,6 +1,7 @@
 
 import { attributes } from './attrs.mjs';
 import { operators } from './operators.mjs';
+import { capitalize } from './utils.mjs';
 
 const logError = msg => console.error(`${msg}`);
 const identRegex = /^[a-z][a-z0-9\-_.]{0,63}$/i;
@@ -91,12 +92,13 @@ export const binded = {
   inspectElem({ context, elem, map, attrPrefix }) {
     this.cleanupElem({ elem });
     attributes.forEach(({ name, descriptor, processor }) => {
+      const propName = `${attrPrefix ?? attrPrefixDefault}${capitalize(name)}` 
       const attrName = `${attrPrefix ?? attrPrefixDefault}-${name}`;
-      if (!elem.hasAttribute(attrName))
+      if ((!(propName in elem) || typeof elem[propName] !== 'string') && !elem.hasAttribute(attrName))
         return;
       if (!(bindElemContext in elem))
         elem[bindElemContext] = [];
-      const expObjs = this.parseBindedExp(elem.getAttribute(attrName));
+      const expObjs = this.parseBindedExp(elem[propName] ?? elem.getAttribute(attrName));
       if (!expObjs || !expObjs.length)
         return;
       expObjs.forEach(expObj => {
