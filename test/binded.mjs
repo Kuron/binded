@@ -7,9 +7,9 @@ import { JSDOM } from 'jsdom';
 import { binded } from '../src/binded.mjs';
 
 describe('binded', () => {
-  it('should have 5 methods', () => {
-    assert.equal(Object.keys(binded).length, 5);
-    assert.deepEqual(Object.keys(binded), ['init', 'createMap', 'findScope', 'inspectElem', 'parseBindedExp']);
+  it('should have 6 methods', () => {
+    assert.equal(Object.keys(binded).length, 6);
+    assert.deepEqual(Object.keys(binded), ['init', 'createMap', 'findScope', 'cleanupElem', 'inspectElem', 'parseBindedExp']);
   });
 
   describe('init', () => {
@@ -22,7 +22,25 @@ describe('binded', () => {
     it('should find the scope from a child elem', () => {
       const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><div binded-text="as test"></div></div></body>');
       const bindings = binded.init(dom.window.document.body);
+      assert.ok('test' in bindings.app);
+    });
+
+    it('should not throw when binding multiple time', () => {
+      const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><div binded-text="as test"></div></div></body>');
+      let bindings = binded.init(dom.window.document.body);
+      assert.doesNotThrow(() => binded.init(dom.window.document.body));
       assert.ok('app' in bindings);
+      assert.ok('test' in bindings.app);
+      assert.equal(bindings.app.test, '');
+    });
+    
+    it('should still bind after binding multiple time', () => {
+      const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><div binded-text="as test"></div></div></body>');
+      let bindings = binded.init(dom.window.document.body);
+      bindings = binded.init(dom.window.document.body);
+      bindings.app.test = 'hello world';
+      assert.equal(bindings.app.test, 'hello world');
+      assert.equal(dom.window.document.body.firstChild.firstChild.textContent, 'hello world');
     });
   });
 
@@ -35,6 +53,10 @@ describe('binded', () => {
   });
 
   describe('findScope', () => {
+    // STUB
+  });
+
+  describe('cleanupElem', () => {
     // STUB
   });
 

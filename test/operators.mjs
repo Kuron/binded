@@ -11,7 +11,7 @@ describe('operators', () => {
   });
 
   describe('as', () => {
-    it('should return undefined', () => assert.equal(operators.as({}, 'test', {}), undefined));
+    it('should return a function', () => assert.equal(typeof operators.as({}, 'test', {}), 'function'));
 
     it('should throw an exception when setting a value', () => {
       const map = {};
@@ -27,7 +27,7 @@ describe('operators', () => {
   });
 
   describe('into', () => {
-    it('should return undefined', () => assert.equal(operators.into({}, 'test', { set: () => null }, {}), undefined));
+    it('should return a function', () => assert.equal(typeof operators.into({}, 'test', { set: () => null }, {}), 'function'));
   
     it('should throw an exception when getting the alias', () => {
       const map = {};
@@ -61,7 +61,7 @@ describe('operators', () => {
   });
 
   describe('on', () => {
-    it('should return undefined', t => assert.equal(operators.on(mockElem(t), 'click', () => null), undefined));
+    it('should return a function', t => assert.equal(typeof operators.on(mockElem(t), 'click', () => null), 'function'));
   
     it('should add the event', t => {
       const elem = mockElem(t);

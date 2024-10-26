@@ -5,6 +5,7 @@ import { operators } from './operators.mjs';
 const logError = msg => console.error(`${msg}`);
 const identRegex = /^[a-z][a-z0-9\-_.]{0,63}$/i;
 const bindScopeContext = Symbol();
+const bindElemContext = Symbol();
 const attrPrefixDefault = 'binded';
 
 export const binded = {
@@ -34,8 +35,6 @@ export const binded = {
     const bindScopeElems = (elem.hasAttribute(bindedScopeAttrName) ? [elem] : [])
       .concat([...elem.querySelectorAll(`[${bindedScopeAttrName}]`)])
       .filter(elem => {
-        if (elem[bindScopeContext])
-          return false;
         const expStr = elem.getAttribute(bindedScopeAttrName);
         const expObjs = this.parseBindedExp(expStr);
         if (!expObjs || expObjs.length !== 1 || expObjs[0].operator !== 'as') 
@@ -47,13 +46,13 @@ export const binded = {
       throw new Error(`No unprocessed binded scopes were found. Declare a scope with the following, "[binded-scope="as name"]"`);
 
     bindScopeElems.forEach(elem => {
-      const { map, proxyMap } = this.createMap();
+      const { alias, map, proxyMap } = bindScopeContext in elem ? elem[bindScopeContext] : this.createMap();
       processingContext.push([ elem, elem.parentNode, elem.nextSibling ]);
       elem.parentNode.removeChild(elem);
    
       const expStr = elem.getAttribute(bindedScopeAttrName);
       const expObjs = this.parseBindedExp(expStr);
-      elem[bindScopeContext] = { alias: expObjs[0].right, map, proxyMap };
+      elem[bindScopeContext] = { alias: alias ?? expObjs[0].right, map, proxyMap };
     });
 
     bindScopeElems.forEach(elem => {
@@ -71,27 +70,30 @@ export const binded = {
       const { alias, proxyMap } = child[bindScopeContext];
       const parentScope = child.parentNode.closest(`[${bindedScopeAttrName}]`);
 
-      if (parentScope) {
+      if (parentScope && parentScope[bindScopeContext].map[alias] !== proxyMap) {
         if (alias in parentScope[bindScopeContext].map)
           logError(`Duplicate scope name and alias found, "${alias}". The scope will overwrite the existing value.`);
         parentScope[bindScopeContext].map[alias] = proxyMap;
       }
-      else
+      else if (parentMap[alias] !== proxyMap)
         parentMap[alias] = proxyMap;
-    }
-
-    while (processingContext.length) {
-      const [ child ] = processingContext.shift();
-      child[bindScopeContext].map = null;
-      child[bindScopeContext].proxyMap = null;
     }
   },
 
+  cleanupElem({ elem }) {
+    if (bindElemContext in elem)
+      while (elem[bindElemContext].length)
+        elem[bindElemContext].shift()();
+  },
+
   inspectElem({ context, elem, map, attrPrefix }) {
+    this.cleanupElem({ elem });
     attributes.forEach(({ name, descriptor, processor }) => {
       const attrName = `${attrPrefix ?? attrPrefixDefault}-${name}`;
       if (!elem.hasAttribute(attrName))
         return;
+      if (!(bindElemContext in elem))
+        elem[bindElemContext] = [];
       const expObjs = this.parseBindedExp(elem.getAttribute(attrName));
       if (!expObjs || !expObjs.length)
         return;
@@ -106,7 +108,7 @@ export const binded = {
           if (descriptor.validRightAttrs && expObj.rightAttrs.length && !expObj.rightAttrs.every(attr => descriptor.validRightAttrs.includes(attr)))
             throw new Error(`The right operand specified an unknown attribute, "${expObj.rightAttrs}"`);
         }
-        processor[expObj.operator]({ elem, expObj, map, context: context?.[name] });
+        elem[bindElemContext].push(processor[expObj.operator]({ elem, expObj, map, context: context?.[name] }));
       });
     });
   },

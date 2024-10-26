@@ -13,7 +13,7 @@ npm install @kurons/binded
 
 The bundle from ```node_modules/@kurons/binded/dist/binded.js``` can be loaded in a browser.
 
-```
+```html
 <script src="<PATH>/binded.js"></script>
 ```
 
@@ -107,7 +107,9 @@ app.disableAllButtons = true;
 ## API
 
 ```javascript
-binded.bind(              // Binds an element and returns an object with the bindings. It will ignore scopes already binded.
+binded.bind(              // Binds an element and returns an object with the bindings.
+                          //   * Can be called multiple times to process new bindings for a scope
+                          //   * Assumes scope hierarchy has not changed when called multiple times
   document.body,          // There has to be at least 1 scope binded as a child in the specified element
   {
     attrPrefix: 'binded', // The attribute prefix, default is 'binded'

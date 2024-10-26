@@ -7,7 +7,7 @@ export const attributes = [
     descriptor: { reqLeft: true },
     processor: {
       as({ elem, expObj: { left: refName, right: alias }, map }) {
-        operators.as(map, alias, {
+        return operators.as(map, alias, {
           get() { return elem.getAttribute(refName); },
           set(value) { elem.setAttribute(refName, value); },
         });
@@ -19,7 +19,7 @@ export const attributes = [
     name: 'elem',
     processor: {
       as({ elem, expObj: { right: alias }, map }) {
-        operators.as(map, alias, { value: elem });
+        return operators.as(map, alias, { value: elem });
       },
     },
   },
@@ -29,7 +29,7 @@ export const attributes = [
     descriptor: { reqContext: true, reqLeft: true, validRightAttrs: ['prevent', 'stop'] },
     processor: {
       on({ elem, expObj: { left: funcName, right: eventType, rightAttrs: eventModifiers }, context }) {
-        operators.on(elem, eventType, context[funcName], eventModifiers);
+        return operators.on(elem, eventType, context[funcName], eventModifiers);
       },
     },
   },
@@ -38,7 +38,7 @@ export const attributes = [
     name: 'html',
     processor: {
       as({ elem, expObj: { right: alias }, map }) {
-        operators.as(map, alias, {
+        return operators.as(map, alias, {
           get() { return elem.innerHTML; },
           set(value) { elem.innerHTML = value; },
         });
@@ -51,14 +51,14 @@ export const attributes = [
     descriptor: { reqLeft: true },
     processor: {
       as({ elem, expObj: { left: refName, right: alias }, map }) {
-        operators.as(map, alias, {
+        return operators.as(map, alias, {
           get() { return elem[refName]; },
           set(value) { elem[refName] = value; },
         });
       },
 
       into({ elem, expObj: { left: refName, right: alias }, map }) {
-        operators.into(map, alias, {
+        return operators.into(map, alias, {
           set: (elem, value) => elem[refName] = value,
         }, elem);
       }
@@ -69,7 +69,7 @@ export const attributes = [
     name: 'text',
     processor: {
       as({ elem, expObj: { right: alias }, map }) {
-        operators.as(map, alias, {
+        return operators.as(map, alias, {
           get() { return elem.textContent; },
           set(value) { elem.textContent = value; },
         });
