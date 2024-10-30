@@ -1,4 +1,7 @@
 {
-  "branches": ["release"],
+  "branches": [
+    { "name": "main", "channel": "next", "prerelease": "alpha" },
+    { "name": "release" }
+  ],
   "repositoryUrl": "git@github.com:Kuron/binded.git"
 }
