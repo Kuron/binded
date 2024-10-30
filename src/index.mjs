@@ -6,7 +6,7 @@ const profilingStats = {};
 
 window.binded = {
   bind: (elem, opts) => {
-    const ret = (opts.profiling ? profileAllMethods(binded, profilingStats) : binded).init(elem, opts);
+    const ret = (opts?.profiling ? profileAllMethods(binded, profilingStats) : binded).init(elem, opts);
     opts.profiling && console.table(profilingStats);
     return ret;
   },
