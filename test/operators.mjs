@@ -58,6 +58,15 @@ describe('operators', () => {
       assert.equal(elem1.propA, 2);
       assert.equal(elem2.propB, 2);
     });
+  
+    it('should bind one object and cleanup', () => {
+      const map = {}, elem = {};
+      const cleanup = operators.into(map, 'test', { set: (elem, value) => elem['propA'] = value }, elem);
+      map.test = 2;
+      cleanup();
+      map.test = 1;
+      assert.equal(elem.propA, 2);
+    });
   });
 
   describe('on', () => {
