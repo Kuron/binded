@@ -8,8 +8,10 @@
   },
   "scripts": {
     "bundle": "npx rollup src/index.mjs --file dist/binded.js --format iife",
+    "cc": "npx c8 node test/test.mjs",
     "lint": "npx eslint .",
     "test": "node test/test.mjs",
+    "test:dev": "nodemon node test/test.mjs",
     "prepare": "husky"
   },
   "author": "Kuron",
@@ -18,10 +20,12 @@
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@eslint/js": "^9.12.0",
+    "c8": "^10.1.2",
     "eslint": "^9.12.0",
     "globals": "^15.11.0",
     "husky": "^9.1.6",
     "jsdom": "^25.0.1",
+    "nodemon": "^3.1.7",
     "rollup": "^4.24.0",
     "semantic-release": "^22.0.12"
   }
