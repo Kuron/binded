@@ -1,5 +1,5 @@
 
-export const capitalize = str => str.length ? str[0].toUpperCase() + (str.substring(1) ?? '') : str;
+export const capitalize = str => str.length ? str[0].toUpperCase() + str.substring(1) : str;
 
 export const profileMethod = (obj, method, stat) => {
   return wrapMethod(obj, method, function (proceed) {
