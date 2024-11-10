@@ -54,7 +54,7 @@ describe('HTML', () => {
       assert.doesNotThrow(() => binded.init(dom.window.document.body, { context }));
     });
 
-    it('should throw when the left-operand is missing', () => {
+    it('should not throw when the left-operand is missing', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-event="on click">SAVE</div></body>');
       assert.doesNotThrow(() => binded.init(dom.window.document.body, { context }));
     });
