@@ -56,12 +56,19 @@ describe('HTML', () => {
 
     it('should throw when the left-operand is missing', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-event="on click">SAVE</div></body>');
-      assert.throws(() => binded.init(dom.window.document.body, { context }));
+      assert.doesNotThrow(() => binded.init(dom.window.document.body, { context }));
     });
 
-    it('should not throw because noop is built-in', () => {
-      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-event="noop on click">SAVE</div></body>');
-      assert.doesNotThrow(() => binded.init(dom.window.document.body, { context }));
+    it('should throw when the listener is not defined', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-event="notDefinedListener on click">SAVE</div></body>');
+      assert.throws(() => binded.init(dom.window.document.body));
+      assert.throws(() => binded.init(dom.window.document.body, {}));
+      assert.throws(() => binded.init(dom.window.document.body, { event: {} }));
+    });
+
+    it('should not throw when a listener is not specified; will default to noop', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-event="on click">SAVE</div></body>');
+      assert.doesNotThrow(() => binded.init(dom.window.document.body));
     });
   });
 

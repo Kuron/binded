@@ -10,12 +10,6 @@ const bindScopeContext = Symbol();
 const bindElemContext = Symbol();
 const attrPrefixDefault = 'binded';
 
-export const reservedContext = {
-  event: {
-    noop: () => void 0,
-  },
-};
-
 export const binded = {
   init(elem, opts) {
     if (opts && 'attrPrefix' in opts && !attrPrefixRegex.test(opts.attrPrefix))
@@ -121,7 +115,7 @@ export const binded = {
           if (descriptor.validRightAttrs && expObj.rightAttrs.length && !expObj.rightAttrs.every(attr => descriptor.validRightAttrs.includes(attr)))
             throw new Error(`The right operand specified an unknown attribute, "${expObj.rightAttrs}"`);
         }
-        elem[bindElemContext].push(processor[expObj.operator]({ elem, expObj, map, context: context?.[name] ?? {} }));
+        elem[bindElemContext].push(processor[expObj.operator]({ elem, expObj, map, context: context?.[name] }));
       });
     });
   },

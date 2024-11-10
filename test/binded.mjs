@@ -88,7 +88,7 @@ describe('binded', () => {
     });
 
     it('should not throw when using a reserved event context with no context specified', () => {
-      const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><input binded-event="noop on change"/></div></body>');
+      const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><input binded-event="on change"/></div></body>');
       assert.doesNotThrow(() => binded.init(dom.window.document.body));
     });
   });

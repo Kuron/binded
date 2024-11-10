@@ -31,7 +31,7 @@ describe('attrs', () => {
   describe('event', () => {
     let attr = attributes[2];
     it('should be named, event', () => assert.equal(attr.name, 'event'));
-    it('should have the expected descriptor', () => assert.deepEqual(attr.descriptor, { reqLeft: true, validRightAttrs: ['prevent', 'stop'] }));
+    it('should have the expected descriptor', () => assert.deepEqual(attr.descriptor, { validRightAttrs: ['prevent', 'stop'] }));
     it('should have 1 processor', () => assert.equal(Object.keys(attr.processor).length, 1));
     it('should have an "on" processor', () => assert.ok('on' in attr.processor));
   });
