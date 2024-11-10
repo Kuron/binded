@@ -27,6 +27,14 @@ describe('HTML', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div foo="bar" binded-attr="as test"/></body>');
       assert.throws(() => binded.init(dom.window.document.body));
     });
+    
+    it('should write to the foo attr and textContent', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-attr="foo into test" binded-text="into test"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      app.test = 'HELLO';
+      assert.equal(dom.window.document.body.firstChild.getAttribute('foo'), 'HELLO');
+      assert.equal(dom.window.document.body.firstChild.textContent, 'HELLO');
+    });
   });
 
   describe('binded-event', () => {
@@ -54,6 +62,16 @@ describe('HTML', () => {
     it('should not throw because noop is built-in', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-event="noop on click">SAVE</div></body>');
       assert.doesNotThrow(() => binded.init(dom.window.document.body, { context }));
+    });
+  });
+
+  describe('binded-html', () => {
+    it('should write to the title prop and innerHTML', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-prop="title into test" binded-html="into test"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      app.test = 'HELLO';
+      assert.equal(dom.window.document.body.firstChild.title, 'HELLO');
+      assert.equal(dom.window.document.body.firstChild.innerHTML, 'HELLO');
     });
   });
 
@@ -105,6 +123,14 @@ describe('HTML', () => {
       app.test = 'WORLD';
       assert.equal(app.test, 'WORLD');
       assert.equal(dom.window.document.body.firstChild.textContent, 'WORLD');
+    });
+    
+    it('should write to the title prop and textContent', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-prop="title into test" binded-text="into test"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      app.test = 'HELLO';
+      assert.equal(dom.window.document.body.firstChild.title, 'HELLO');
+      assert.equal(dom.window.document.body.firstChild.textContent, 'HELLO');
     });
   });
 });

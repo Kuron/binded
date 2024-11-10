@@ -18,6 +18,12 @@ export const attributes = [
           set(value) { elem.setAttribute(refName, value); },
         });
       },
+      
+      into({ elem, expObj: { left: refName, right: alias }, map }) {
+        return operators.into(map, alias, {
+          set: (elem, value) => elem.setAttribute(refName, value),
+        }, elem);
+      },
     },
   },
 
@@ -48,7 +54,13 @@ export const attributes = [
           get() { return elem.innerHTML; },
           set(value) { elem.innerHTML = value; },
         });
-      }
+      },
+
+      into({ elem, expObj: { right: alias }, map }) {
+        return operators.into(map, alias, {
+          set: (elem, value) => elem.innerHTML = value,
+        }, elem);
+      },
     },
   },
 
@@ -67,7 +79,7 @@ export const attributes = [
         return operators.into(map, alias, {
           set: (elem, value) => elem[refName] = value,
         }, elem);
-      }
+      },
     },
   },
 
@@ -79,6 +91,12 @@ export const attributes = [
           get() { return elem.textContent; },
           set(value) { elem.textContent = value; },
         });
+      },
+
+      into({ elem, expObj: { right: alias }, map }) {
+        return operators.into(map, alias, {
+          set: (elem, value) => elem.textContent = value,
+        }, elem);
       },
     },
   },
