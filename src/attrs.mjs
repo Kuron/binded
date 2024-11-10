@@ -1,11 +1,6 @@
 
+import { reservedContext } from './binded.mjs';
 import { operators } from './operators.mjs';
-
-const reservedContext = {
-  event: {
-    noop: () => void 0,
-  },
-};
 
 export const attributes = [
   {
@@ -38,7 +33,7 @@ export const attributes = [
 
   {
     name: 'event',
-    descriptor: { reqContext: true, reqLeft: true, validRightAttrs: ['prevent', 'stop'] },
+    descriptor: { reqLeft: true, validRightAttrs: ['prevent', 'stop'] },
     processor: {
       on({ elem, expObj: { left: funcName, right: eventType, rightAttrs: eventModifiers }, context }) {
         return operators.on(elem, eventType, reservedContext.event[funcName] ?? context[funcName], eventModifiers);

@@ -86,6 +86,11 @@ describe('binded', () => {
       app.search = 'testing';
       assert.equal(dom.window.document.body.firstChild.firstChild.value, 'testing');
     });
+
+    it('should not throw when using a reserved event context with no context specified', () => {
+      const dom = new JSDOM('<!doctype html><body><div binded-scope="as app"><input binded-event="noop on change"/></div></body>');
+      assert.doesNotThrow(() => binded.init(dom.window.document.body));
+    });
   });
 
   describe('parseBindedExp', () => {
