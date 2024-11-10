@@ -63,7 +63,8 @@ describe('HTML', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-event="notDefinedListener on click">SAVE</div></body>');
       assert.throws(() => binded.init(dom.window.document.body));
       assert.throws(() => binded.init(dom.window.document.body, {}));
-      assert.throws(() => binded.init(dom.window.document.body, { event: {} }));
+      assert.throws(() => binded.init(dom.window.document.body, { context: {} }));
+      assert.throws(() => binded.init(dom.window.document.body, { context: { event: {} } }));
     });
 
     it('should not throw when a listener is not specified; will default to noop', () => {
