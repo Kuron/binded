@@ -29,6 +29,8 @@ export const operators = {
   },
 
   on(elem, eventType, callback, modifiers) {
+    if (!callback)
+      throw new Error(`binded: Callback not specified`);
     const listener = function (event) {
       if (modifiers && modifiers.length) {
         if (modifiers.includes('prevent'))
