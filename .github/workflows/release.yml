@@ -31,8 +31,8 @@ jobs:
         run: npm clean-install
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures
-      - name: Run tests
-        run: npm run test
+      - name: Run tests+cc
+        run: npm run cc
       - name: Run lint
         run: npm run lint
       - name: Run bundle
