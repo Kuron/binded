@@ -102,6 +102,7 @@ app.disableAllButtons = true;
 | ```binded-event``` | Binds a function as an event on an element. The ```prevent``` and ```stop``` event modifiers for ```preventDefault``` and ```stopPropagation``` is available and can be appended after the event name separated by ```.```. | ```<form binded-event="searchText on submit.prevent"></form>``` |
 | ```binded-html``` | Binds to an element's ```innerHTML``` | ```<div binded-html="as sanitizedHTML"></div>``` |
 | ```binded-prop``` | Binds to an element's property | ```<input type="search" binded-prop="as searchText"/>``` |
+| ```binded-style``` | Binds to an element's style | ```<div binded-style="color as fontColor"></div>``` |
 | ```binded-text``` | Binds to an element's ```innerText``` | ```<div binded-text="as safeHTML"></div>``` |
 
 ## API

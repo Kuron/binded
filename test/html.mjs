@@ -117,6 +117,23 @@ describe('HTML', () => {
     });
   });
 
+  describe('binded-style', () => {
+    it('should read the binded style color', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-style="color as test" style="color: red;"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      assert.equal(app.test, 'red');
+      assert.equal(dom.window.document.body.firstChild.style.color, 'red');
+    });
+    
+    it('should write the binded style color', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-style="color as test" style="color: red;"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      app.test = 'blue';
+      assert.equal(app.test, 'blue');
+      assert.equal(dom.window.document.body.firstChild.style.color, 'blue');
+    });
+  });
+
   describe('binded-text', () => {
     it('should read the binded text', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-text="as test">HELLO</div></body>');

@@ -78,6 +78,25 @@ export const attributes = [
   },
 
   {
+    name: 'style',
+    descriptor: { reqLeft: true },
+    processor: {
+      as({ elem, expObj: { left: refName, right: alias }, map }) {
+        return operators.as(map, alias, {
+          get() { return elem.style[refName]; },
+          set(value) { elem.style[refName] = value; },
+        });
+      },
+
+      into({ elem, elemObj: { left: refName, right: alias }, map }) {
+        return operators.into(map, alias, {
+          set: (elem, value) => elem.style[refName] = value,
+        }, elem);
+      },
+    },
+  },
+
+  {
     name: 'text',
     processor: {
       as({ elem, expObj: { right: alias }, map }) {
