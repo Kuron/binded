@@ -73,6 +73,24 @@ describe('HTML', () => {
     });
   });
 
+  describe('binded-hide', () => {
+    it('should hide the element', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-hide="as test"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      app.test = true;
+      assert.equal(app.test, true);
+      assert.equal(dom.window.document.body.firstChild.style.display, 'none');
+    });
+    
+    it('should show the element', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-hide="as test"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      app.test = false;
+      assert.equal(app.test, false);
+      assert.equal(dom.window.document.body.firstChild.style.display, 'revert');
+    });
+  });
+  
   describe('binded-html', () => {
     it('should write to the title prop and innerHTML', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-prop="title into test" binded-html="into test"></div></body>');
@@ -117,6 +135,24 @@ describe('HTML', () => {
     });
   });
 
+  describe('binded-show', () => {
+    it('should show the element', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-show="as test"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      app.test = true;
+      assert.equal(app.test, true);
+      assert.equal(dom.window.document.body.firstChild.style.display, 'revert');
+    });
+    
+    it('should hide the element', () => {
+      const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-show="as test"></div></body>');
+      const { app } = binded.init(dom.window.document.body);
+      app.test = false;
+      assert.equal(app.test, false);
+      assert.equal(dom.window.document.body.firstChild.style.display, 'none');
+    });
+  });
+  
   describe('binded-style', () => {
     it('should read the binded style color', () => {
       const dom = new JSDOM('<!doctype html><body binded-scope="as app"><div binded-style="color as test" style="color: red;"></div></body>');

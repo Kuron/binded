@@ -41,6 +41,24 @@ export const attributes = [
   },
 
   {
+    name: 'hide',
+    processor: {
+      as({ elem, expObj: { right: alias }, map }) {
+        return operators.as(map, alias, {
+          get() { return elem.style.display === 'none'; },
+          set(value) { elem.style.display = value ? 'none' : 'revert'; },
+        });
+      },
+
+      into({ elem, elemObj: { right: alias }, map }) {
+        return operators.into(map, alias, {
+          set: (elem, value) => elem.style.display = value ? 'none' : 'revert',
+        }, elem);
+      },
+    },
+  },
+  
+  {
     name: 'html',
     processor: {
       as({ elem, expObj: { right: alias }, map }) {
@@ -77,6 +95,24 @@ export const attributes = [
     },
   },
 
+  {
+    name: 'show',
+    processor: {
+      as({ elem, expObj: { right: alias }, map }) {
+        return operators.as(map, alias, {
+          get() { return elem.style.display !== 'none'; },
+          set(value) { elem.style.display = value ? 'revert' : 'none'; },
+        });
+      },
+
+      into({ elem, elemObj: { right: alias }, map }) {
+        return operators.into(map, alias, {
+          set: (elem, value) => elem.style.display = value ? 'revert' : 'none',
+        }, elem);
+      },
+    },
+  },
+  
   {
     name: 'style',
     descriptor: { reqLeft: true },
