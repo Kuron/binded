@@ -50,7 +50,7 @@ export const attributes = [
         });
       },
 
-      into({ elem, elemObj: { right: alias }, map }) {
+      into({ elem, expObj: { right: alias }, map }) {
         return operators.into(map, alias, {
           set: (elem, value) => elem.style.display = value ? 'none' : 'revert',
         }, elem);
@@ -105,7 +105,7 @@ export const attributes = [
         });
       },
 
-      into({ elem, elemObj: { right: alias }, map }) {
+      into({ elem, expObj: { right: alias }, map }) {
         return operators.into(map, alias, {
           set: (elem, value) => elem.style.display = value ? 'revert' : 'none',
         }, elem);
@@ -124,7 +124,7 @@ export const attributes = [
         });
       },
 
-      into({ elem, elemObj: { left: refName, right: alias }, map }) {
+      into({ elem, expObj: { left: refName, right: alias }, map }) {
         return operators.into(map, alias, {
           set: (elem, value) => elem.style[refName] = value,
         }, elem);
