@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import { operators } from '../src/operators.mjs';
+import { mockElem, mockEvent } from './lib/mocks.mjs';
 
 describe('operators', () => {
   it('should have 3 operators', () => {
@@ -71,6 +72,12 @@ describe('operators', () => {
 
   describe('on', () => {
     it('should return a function', t => assert.equal(typeof operators.on(mockElem(t), 'click', () => null), 'function'));
+    
+    it('should throw an error', t => {
+      assert.throws(() => operators.on(mockElem(t), 'click'));
+      assert.throws(() => operators.on(mockElem(t), 'click', null));
+      assert.throws(() => operators.on(mockElem(t), 'click', undefined));
+    });
   
     it('should add the event', t => {
       const elem = mockElem(t);
@@ -108,21 +115,5 @@ describe('operators', () => {
       assert.equal(event.stopPropagation.mock.calls[0].arguments.length, 0);
     });
   });
-});
-
-const mockAllFuncs = (t, obj) => {
-  Object.keys(obj)
-    .filter(key => typeof obj[key] === 'function')
-    .forEach(key => t.mock.method(obj, key));
-  return obj;
-};
-
-const mockElem = t => mockAllFuncs(t, {
-  addEventListener: () => undefined,
-});
-
-const mockEvent = t => mockAllFuncs(t, {
-  preventDefault: () => undefined,
-  stopPropagation: () => undefined,
 });
 

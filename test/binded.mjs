@@ -7,9 +7,9 @@ import { JSDOM } from 'jsdom';
 import { binded } from '../src/binded.mjs';
 
 describe('binded', () => {
-  it('should have 6 methods', () => {
-    assert.equal(Object.keys(binded).length, 6);
-    assert.deepEqual(Object.keys(binded), ['init', 'createMap', 'findScope', 'cleanupElem', 'inspectElem', 'parseBindedExp']);
+  it('should have 7 methods', () => {
+    assert.equal(Object.keys(binded).length, 7);
+    assert.deepEqual(Object.keys(binded), ['init', 'createMap', 'findScope', 'cleanupElem', 'inspectElem', 'invokeElemContext', 'parseBindedExp']);
   });
 
   describe('init', () => {

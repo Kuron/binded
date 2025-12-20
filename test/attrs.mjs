@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import { attributes } from '../src/attrs.mjs';
+import { mockElem } from './lib/mocks.mjs';
 
 describe('attrs', () => {
   it('should have 9 attributes', () => assert.equal(Object.keys(attributes).length, 9));
@@ -18,6 +19,8 @@ describe('attrs', () => {
     it('should have 1 processor', () => assert.equal(Object.keys(attr.processor).length, 2));
     it('should have an "as" processor', () => assert.ok('as' in attr.processor));
     it('should have an "into" processor', () => assert.ok('into' in attr.processor));
+    it('should return a cleanup func for as', t => assert.equal('function', typeof attr.processor.as({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
+    it('should return a cleanup func for into', t => assert.equal('function', typeof attr.processor.into({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
   });
 
   describe('elem', () => {
@@ -26,6 +29,7 @@ describe('attrs', () => {
     it('should have the expected descriptor', () => assert.ok(!attr.descriptor));
     it('should have 1 processor', () => assert.equal(Object.keys(attr.processor).length, 1));
     it('should have an "as" processor', () => assert.ok('as' in attr.processor));
+    it('should return a cleanup func for as', t => assert.equal('function', typeof attr.processor.as({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
   });
 
   describe('event', () => {
@@ -34,6 +38,7 @@ describe('attrs', () => {
     it('should have the expected descriptor', () => assert.deepEqual(attr.descriptor, { validRightAttrs: ['prevent', 'stop'] }));
     it('should have 1 processor', () => assert.equal(Object.keys(attr.processor).length, 1));
     it('should have an "on" processor', () => assert.ok('on' in attr.processor));
+    it('should return a hooks obj for on', t => assert.deepEqual(['afterBinded', 'cleanup'], Object.keys(attr.processor.on({ elem: mockElem(t), expObj: { right: 'click' }, map: {} }))));
   });
 
   describe('hide', () => {
@@ -43,6 +48,8 @@ describe('attrs', () => {
     it('should have 1 processor', () => assert.equal(Object.keys(attr.processor).length, 2));
     it('should have an "as" processor', () => assert.ok('as' in attr.processor));
     it('should have an "into" processor', () => assert.ok('into' in attr.processor));
+    it('should return a cleanup func for as', t => assert.equal('function', typeof attr.processor.as({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
+    it('should return a cleanup func for into', t => assert.equal('function', typeof attr.processor.into({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
   });
   
   describe('html', () => {
@@ -52,6 +59,8 @@ describe('attrs', () => {
     it('should have 1 processor', () => assert.equal(Object.keys(attr.processor).length, 2));
     it('should have an "as" processor', () => assert.ok('as' in attr.processor));
     it('should have an "into" processor', () => assert.ok('into' in attr.processor));
+    it('should return a cleanup func for as', t => assert.equal('function', typeof attr.processor.as({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
+    it('should return a cleanup func for into', t => assert.equal('function', typeof attr.processor.into({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
   });
 
   describe('prop', () => {
@@ -61,6 +70,8 @@ describe('attrs', () => {
     it('should have 1 processor', () => assert.equal(Object.keys(attr.processor).length, 2));
     it('should have an "as" processor', () => assert.ok('as' in attr.processor));
     it('should have an "into" processor', () => assert.ok('into' in attr.processor));
+    it('should return a cleanup func for as', t => assert.equal('function', typeof attr.processor.as({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
+    it('should return a cleanup func for into', t => assert.equal('function', typeof attr.processor.into({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
   });
 
   describe('show', () => {
@@ -70,6 +81,8 @@ describe('attrs', () => {
     it('should have 1 processor', () => assert.equal(Object.keys(attr.processor).length, 2));
     it('should have an "as" processor', () => assert.ok('as' in attr.processor));
     it('should have an "into" processor', () => assert.ok('into' in attr.processor));
+    it('should return a cleanup func for as', t => assert.equal('function', typeof attr.processor.as({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
+    it('should return a cleanup func for into', t => assert.equal('function', typeof attr.processor.into({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
   });
   
   describe('style', () => {
@@ -79,6 +92,8 @@ describe('attrs', () => {
     it('should have 2 processor', () => assert.equal(Object.keys(attr.processor).length, 2));
     it('should have an "as" processor', () => assert.ok('as' in attr.processor));
     it('should have an "into" processor', () => assert.ok('into' in attr.processor));
+    it('should return a cleanup func for as', t => assert.equal('function', typeof attr.processor.as({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
+    it('should return a cleanup func for into', t => assert.equal('function', typeof attr.processor.into({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
   });
 
   describe('text', () => {
@@ -88,6 +103,8 @@ describe('attrs', () => {
     it('should have 2 processor', () => assert.equal(Object.keys(attr.processor).length, 2));
     it('should have an "as" processor', () => assert.ok('as' in attr.processor));
     it('should have an "into" processor', () => assert.ok('into' in attr.processor));
+    it('should return a cleanup func for as', t => assert.equal('function', typeof attr.processor.as({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
+    it('should return a cleanup func for into', t => assert.equal('function', typeof attr.processor.into({ elem: mockElem(t), expObj: { right: 'alias' }, map: {} })));
   });
 });
 

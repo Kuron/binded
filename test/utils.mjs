@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { capitalize, profileAllMethods, wrapMethod } from '../src/utils.mjs';
+import { capitalize, iterateObj, profileAllMethods, walkObj, wrapMethod } from '../src/utils.mjs';
 
 describe('utils', () => {
   describe('capitalize', () => {
@@ -70,6 +70,76 @@ describe('utils', () => {
       const newMethod = wrapMethod(o, 'oldMethod', proceed => proceed());
       assert.deepEqual(newMethod(true, 1, 'a'), { bool: true, num: 1, str: 'a' });
       assert.deepEqual(newMethod(false, 0, ''), { bool: false, num: 0, str: '' });
+    });
+  });
+
+  describe('iterateObj', () => {
+    it('should iterate an array', () => {
+      const test = [undefined, null, false, 0, ''];
+      const expected = [
+        undefined, 0, test,
+        null, 1, test,
+        false, 2, test,
+        0, 3, test,
+        '', 4, test,
+      ];
+
+      const actual = [];
+      iterateObj(test, (value, key, obj) => actual.push(value, key, obj));
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should iterate an object', () => {
+      const test = { u: undefined, l: null, b: false, n: 0, s: '' };
+      const expected = [
+        undefined, 'u', test,
+        null, 'l', test,
+        false, 'b', test,
+        0, 'n', test,
+        '', 's', test,
+      ];
+
+      const actual = [];
+      iterateObj(test, (value, key, obj) => actual.push(value, key, obj));
+      assert.deepEqual(actual, expected);
+    });
+  });
+
+  describe('walkObj', () => {
+    it('should walk the entire object', () => {
+      const test = {
+        obj1: {
+          obj2: {
+            num2: 2,
+          }
+        },
+        arr1: [
+          { obj3: { bool: true } },
+          2,
+          'two',
+          null,
+          undefined,
+        ],
+      };
+      const expected = [
+        2, 'num2',
+        true, 'bool',
+        2, 1,
+        'two', 2,
+        null, 3,
+        undefined, 4,
+      ];
+
+      const actual = [];
+      walkObj(test, (value, key) => actual.push(value, key));
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should throw an error', () => {
+      assert.throws(() => walkObj(undefined, () => null));
+      assert.throws(() => walkObj(null, () => null));
+      assert.throws(() => walkObj(0, () => null));
+      assert.throws(() => walkObj('', () => null));
     });
   });
 });
