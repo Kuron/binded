@@ -1,7 +1,7 @@
 
 import { attributes } from './attrs.mjs';
 import { operators } from './operators.mjs';
-import { capitalize } from './utils.mjs';
+import { capitalize, walkObj } from './utils.mjs';
 
 const logError = msg => console.error(`${msg}`);
 const attrPrefixRegex = /^[a-z]{0,32}$/i;
@@ -15,6 +15,11 @@ export const binded = {
     if (opts && 'attrPrefix' in opts && !attrPrefixRegex.test(opts.attrPrefix))
       throw new Error(`Invalid attrPrefix specified, ${opts.attrPrefix}`);
     const { map, proxyMap } = this.createMap();
+    if (opts?.context)
+      walkObj(opts.context, (value, key, obj) => {
+        if (typeof value !== 'function') return;
+        obj[key] = obj[key].bind(proxyMap);
+      });
     this.findScope(elem, map, opts);
     return proxyMap;
   },
@@ -47,6 +52,7 @@ export const binded = {
           throw new Error(`Invalid expression for ${bindedScopeAttrName}, "${expStr}"`);
         return true;
       });
+    const bindedElems = [];
 
     if (!bindScopeElems.length)
       throw new Error(`No unprocessed binded scopes were found. Declare a scope with the following, "[binded-scope="as name"]"`);
@@ -63,7 +69,10 @@ export const binded = {
 
     bindScopeElems.forEach(elem => {
       const { map } = elem[bindScopeContext];
-      [...elem.getElementsByTagName('*')].forEach(elem => this.inspectElem({ elem, map, context, attrPrefix }));
+      bindedElems.push.apply(
+        bindedElems,
+        [...elem.getElementsByTagName('*')].filter(elem => this.inspectElem({ elem, map, context, attrPrefix })),
+      );
     });
 
     for (let i = processingContext.length - 1; i > -1; i--) {
@@ -84,27 +93,31 @@ export const binded = {
       else if (parentMap[alias] !== proxyMap)
         parentMap[alias] = proxyMap;
     }
+
+    bindedElems.forEach(elem =>
+      elem[bindElemContext].forEach(context => this.invokeElemContext(context, 'afterBinded'))
+    );
   },
 
   cleanupElem({ elem }) {
     if (bindElemContext in elem)
       while (elem[bindElemContext].length)
-        elem[bindElemContext].shift()();
+        this.invokeElemContext(elem[bindElemContext].shift(), 'cleanup');
   },
 
   inspectElem({ context, elem, map, attrPrefix }) {
     this.cleanupElem({ elem });
-    attributes.forEach(({ name, descriptor, processor }) => {
+    return attributes.reduce((result, { name, descriptor, processor }) => {
       const propName = `${attrPrefix ?? attrPrefixDefault}${capitalize(name)}` 
       const attrName = `${attrPrefix ?? attrPrefixDefault}-${name}`;
       if ((!(propName in elem) || typeof elem[propName] !== 'string') && !elem.hasAttribute(attrName))
-        return;
+        return result;
       if (!(bindElemContext in elem))
         elem[bindElemContext] = [];
       const expObjs = this.parseBindedExp(elem[propName] ?? elem.getAttribute(attrName));
       if (!expObjs || !expObjs.length)
-        return;
-      expObjs.forEach(expObj => {
+        return result;
+      return expObjs.every(expObj => {
         if (!(expObj.operator in processor))
           throw new Error(`Invalid operator used for binder "${name}", "${expObj.operator}"`);
         if (descriptor) {
@@ -112,12 +125,21 @@ export const binded = {
             throw new Error(`This binder is missing a required context, "${name}"`);
           if (descriptor.reqLeft && !expObj.left)
             throw new Error(`The left operand is required for this binder, "${name}"`);
+          if (descriptor.validLeftAttrs && expObj.leftAttrs.length && !expObj.leftAttrs.every(attr => descriptor.validLeftAttrs.includes(attr)))
+            throw new Error(`The left operand specified an unknown attribute, "${expObj.leftAttrs}"`);
           if (descriptor.validRightAttrs && expObj.rightAttrs.length && !expObj.rightAttrs.every(attr => descriptor.validRightAttrs.includes(attr)))
             throw new Error(`The right operand specified an unknown attribute, "${expObj.rightAttrs}"`);
         }
         elem[bindElemContext].push(processor[expObj.operator]({ elem, expObj, map, context: context?.[name] }));
+        return true;
       });
-    });
+    }, false);
+  },
+
+  invokeElemContext(context, prop) {
+    const func = typeof context === 'function' && prop === 'cleanup' ? context : context[prop];
+    if (!func) return;
+    func();
   },
 
   // Expects: [<left-operand>] <operator> <right-operand> ["and" ...]

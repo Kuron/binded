@@ -36,9 +36,10 @@ export const attributes = [
     descriptor: { validRightAttrs: ['prevent', 'stop'] },
     processor: {
       on({ elem, expObj: { left: funcName, leftAttrs: funcModifiers, right: eventType, rightAttrs: eventModifiers }, context }) {
-        if (funcModifiers?.includes('invoke'))
-          setTimeout(() => context[funcName]());
-        return operators.on(elem, eventType, funcName ? context[funcName] : Function.prototype, eventModifiers);
+        return {
+          afterBinded: funcModifiers?.includes('invoke') ? context[funcName] : null,
+          cleanup: operators.on(elem, eventType, funcName ? context[funcName] : Function.prototype, eventModifiers),
+        };
       },
     },
   },

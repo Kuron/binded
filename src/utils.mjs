@@ -33,3 +33,27 @@ export const profileAllMethods = (obj, stats) => {
   }, {});
 };
 
+export const iterateObj = function (obj, callback) {
+  if (Array.isArray(obj)) {
+    for (let i = 0, iLen = obj.length; i < iLen; i++)
+      callback(obj[i], i, obj);
+  }
+  else {
+    for (let key in obj)
+      callback(obj[key], key, obj);
+  }
+};
+
+export const walkObj = function self(obj, callback) {
+  if (typeof obj === 'object' && obj) {
+    iterateObj(obj, (value, key, obj) => {
+      if (typeof value === 'object' && value)
+        self(value, callback);
+      else
+        callback(value, key, obj);
+    });
+  }
+  else
+    throw new Error(`Unexpected type while walking object`);
+};
+
