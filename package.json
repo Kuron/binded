@@ -8,7 +8,8 @@
   },
   "scripts": {
     "bundle": "npx rollup src/index.mjs --file dist/binded.js --format iife",
-    "cc": "npx c8 node test/test.mjs",
+    "cc": "npx c8 npm run test",
+    "cc:dev": "nodemon --exec 'npm run cc'",
     "lint": "npx eslint .",
     "test": "node test/test.mjs",
     "test:dev": "nodemon node test/test.mjs",
