@@ -1,5 +1,6 @@
 
 import { operators } from './operators.mjs';
+import { getStore, setStore, setStoreWhenUnload } from './store.mjs';
 
 export const attributes = [
   {
@@ -34,7 +35,9 @@ export const attributes = [
     name: 'event',
     descriptor: { validRightAttrs: ['prevent', 'stop'] },
     processor: {
-      on({ elem, expObj: { left: funcName, right: eventType, rightAttrs: eventModifiers }, context }) {
+      on({ elem, expObj: { left: funcName, leftAttrs: funcModifiers, right: eventType, rightAttrs: eventModifiers }, context }) {
+        if (funcModifiers?.includes('invoke'))
+          setTimeout(() => context[funcName]());
         return operators.on(elem, eventType, funcName ? context[funcName] : Function.prototype, eventModifiers);
       },
     },
@@ -80,7 +83,12 @@ export const attributes = [
     name: 'prop',
     descriptor: { reqLeft: true },
     processor: {
-      as({ elem, expObj: { left: refName, right: alias }, map }) {
+      as({ elem, expObj: { left: refName, leftAttrs: refModifiers, right: alias }, map }) {
+        if (refModifiers?.includes('store')) {
+          elem[refName] = getStore('prop', alias);
+          setStoreWhenUnload(() => setStore('prop', alias, elem[refName]));
+        }
+
         return operators.as(map, alias, {
           get() { return elem[refName]; },
           set(value) { elem[refName] = value; },
